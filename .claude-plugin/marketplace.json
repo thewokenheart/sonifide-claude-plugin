@@ -6,14 +6,14 @@
   },
   "metadata": {
     "description": "Official Claude Code plugins from Sonifide — release protection for independent music.",
-    "version": "1.0.0"
+    "version": "1.0.1"
   },
   "plugins": [
     {
       "name": "sonifide",
       "source": "./plugins/sonifide",
       "description": "File your music registrations (PRO, MLC, SoundExchange, U.S. Copyright Office) from your own machine, using your own registry logins, with data pulled from your Sonifide account.",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": { "name": "Sonifide", "email": "hello@sonifide.app" },
       "homepage": "https://sonifide.app/claude",
       "license": "MIT",

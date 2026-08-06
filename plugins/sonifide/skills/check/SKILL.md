@@ -52,7 +52,7 @@ of these searches are public, but a logged-in member portal shows more.
 | BMI | repertoire.bmi.com — public Songview search | BMI Work # and ISWC |
 | ASCAP | ascap.com/repertory (ACE) | ASCAP Work ID and ISWC |
 | SESAC | sesac.com repertory | Work ID |
-| eCO | eco.copyright.gov → your case list | Registration number, or current status |
+| eCO | eco.copyright.gov/eService_enu/ → your case list | Registration number, or current status |
 
 Search by **title plus writer name** — title alone returns other people's songs
 with the same name. Confirm the writers on the result match the packet before

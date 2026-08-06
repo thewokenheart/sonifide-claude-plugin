@@ -1,6 +1,8 @@
 # U.S. Copyright Office — eCO
 
-**Portal:** https://eco.copyright.gov
+**Portal:** https://eco.copyright.gov/eService_enu/
+(The trailing path matters — the bare domain redirects to eservice.eco.loc.gov and
+answers 403 in a real browser, so it is a dead end, not a login page.)
 
 Federal copyright registration. This is the strongest ownership evidence in a
 dispute, and it is a prerequisite for suing over infringement in the US. It also
