@@ -1,0 +1,10 @@
+{
+  "name": "sonifide",
+  "description": "File your music registrations from your own machine: pulls your metadata, splits and identifiers from Sonifide, walks you through each registry portal in your own browser under your own login, and writes the confirmation numbers back.",
+  "version": "1.0.0",
+  "author": { "name": "Sonifide", "email": "hello@sonifide.app" },
+  "homepage": "https://sonifide.app/claude",
+  "repository": "https://github.com/thewokenheart/sonifide-claude-plugin",
+  "license": "MIT",
+  "keywords": ["music", "royalties", "copyright", "registration", "mlc", "soundexchange", "ascap", "bmi", "eco"]
+}
