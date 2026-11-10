@@ -44,10 +44,42 @@ A `401` means the token was revoked or expired. Tell the user to re-pair with
 `/sonifide:connect`. A `403` on a packet means the workspace is on the free Demo
 plan and needs Studio.
 
+## Step 1b — Take an approved filing first
+
+Sonifide keeps a filing ledger: the user picks Claude for a filing in the app,
+approves the exact details, and the job waits for you. Always ask for one before
+anything else:
+
+```
+POST {api_url}/api/local-agent/filings/claim
+```
+
+- **204** — nothing approved is waiting. Carry on with Step 2 (the user named a
+  track, or you list them).
+- **404** — this Sonifide server predates the ledger. Carry on with Step 2 the
+  same way.
+- **200** — you have one job. It carries:
+  - `attempt_id` — quote it when you report back
+  - `destination` — `pro`, `mlc`, `soundexchange` or `eco`. **File only this one.**
+  - `payload` — the exact details the user approved. **File these values and
+    nothing else.** If the portal needs something that isn't here, stop and ask;
+    do not take it from elsewhere.
+  - `handoffs` — moments that are always the user's: signing in, paying, and any
+    personal certification. Hand the browser back for each.
+  - `report_to` — where to report the result (Step 6b)
+
+Pull the track's packet too (Step 3) for the field-by-field `guides`, but the
+approved `payload` wins if they differ. If they differ, tell the user: the
+details changed after approval and Sonifide will ask them to approve again.
+
 ## Step 2 — Work out which track
 
 `$ARGUMENTS` normally carries a track id (the Sonifide button sends
 `Run the sonifide:register skill for track 142 ("Bears Forever")`).
+
+If `$ARGUMENTS` is `isrc` (or the user asks you to get their ISRC prefix), skip filing:
+call `GET {api_url}/api/local-agent/tracks`, use any one of their tracks, and follow
+`references/isrc.md` → "Fetching the prefix the artist already has".
 
 If there is no id, call `GET {api_url}/api/local-agent/tracks` and show the user a
 short numbered list — title, artist, and which registries are still `todo` — then
@@ -192,8 +224,36 @@ the response tells you when: `check_after`. Mention it — "your society should
 assign a work number and ISWC in about two weeks, and Sonifide will remind you" —
 so the user knows the loop is closed and doesn't sit waiting on it.
 
-Re-posting the same registry updates the existing row, so it is safe to retry
-after a timeout.
+**If you are not sure whether a submission went through** (the page timed
+out, the browser closed, the confirmation never appeared), do not submit again
+and do not record it as submitted. Report it as `uncertain` (Step 6b): Sonifide
+holds the filing until the user checks their registry account. Submitting twice
+registers the song twice.
+
+`confirmed` is refused without the registry's number (`reference` or
+`work_number`). Use `submitted` until that number exists.
+
+## Step 6b — Report a claimed job
+
+If you took a job in Step 1b, report how it ended to its `report_to` URL:
+
+```bash
+curl -sS -X POST "$API/api/local-agent/attempts/$ATTEMPT_ID/result" \
+  -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+  -d '{"outcome":"submitted","reference":"MLC-SUB-4471"}'
+```
+
+`outcome` is one of:
+
+- `submitted` — the portal accepted it; `reference` is **required**
+- `confirmed` — the registry confirmed it; `reference` (the confirmation or work
+  number) is **required**
+- `rejected` — the portal refused it; put what it said in `note`
+- `not_submitted` — you stopped before sending anything (blocked, user said no)
+- `uncertain` — it may or may not have gone through. Say so; never guess
+
+A job you never report becomes `uncertain` after two hours, and the user is asked
+to check the registry before anything else happens.
 
 Note: ISRC is generated, not filed. There is no ISRC registration row — the code
 belongs on the track in Sonifide, so tell the user to save it there.
